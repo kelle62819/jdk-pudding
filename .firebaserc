@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "jdk-pudding"
+  },
+  "targets": {
+    "jdk-pudding": {
+      "hosting": {
+        "pudding": [
+          "jdk-pudding"
+        ]
+      }
+    }
+  }
+}
