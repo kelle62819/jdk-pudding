@@ -8,9 +8,10 @@ const bucket = admin.storage().bucket()
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
- export const addText = functions.https.onRequest(async (request, response) => {
+ export const newText = functions.database.ref("/new/{textID}").onCreate(async (snapshot, context)=>{
+ 
      const tsRequest = {
-        input: {text: request.query.text},
+        input: {text: snapshot.val()},
         // Select the language and SSML voice gender (optional)
         voice: {
             "languageCode": "en-AU",
@@ -24,7 +25,8 @@ const bucket = admin.storage().bucket()
       };
   // Performs the text-to-speech request
   const [tsResponse] = await client.synthesizeSpeech(tsRequest);
-  let mp3File = bucket.file('output.mp3')
+  let outputFileName = context.params.textID + '.mp3';
+  let mp3File = bucket.file(outputFileName)
   const options = { // construct the file to write
     metadata: {
       contentType: 'audio/mpeg',
@@ -34,12 +36,15 @@ const bucket = admin.storage().bucket()
     }
   };
   await mp3File.save(tsResponse.audioContent,options)
-  let downURL = await bucket.file('output.mp3').getSignedUrl({
+  let downURL = await bucket.file(outputFileName).getSignedUrl({
     action: 'read',
     expires: '03-09-2491'
   })
   console.log(downURL)
   //console.log('Audio content written to file: output.mp3');
-     ref.child("audio").set(downURL[0])
-     response.send('<a href="'+downURL[0]+'">Audio</a>');
+     ref.child("audio").child(context.params.textID).set({
+         text: snapshot.val(),
+         url: downURL[0]
+     })
+     return "OK"
  });

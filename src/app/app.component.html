@@ -1,5 +1,5 @@
-<div *ngIf="url">
-  <audio controls>
-    <source [src]="url" type="audio/mpeg">
-  </audio>
+<div *ngIf="audio">
+    <audio controls>
+      <source [src]="audio.url" type="audio/mpeg">
+    </audio>
 </div>

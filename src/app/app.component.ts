@@ -8,13 +8,17 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent {
   title = 'pudding';
-  audio: Observable<any>;
+  audiosFB: Observable<any[]>;
+  audio: any
   url: string
   constructor(db: AngularFireDatabase) {
-    this.audio = db.object('audio').valueChanges();
-    this.audio.subscribe((url)=>{
-      console.log(url)
-      this.url = url
+    this.audiosFB = db.list('audio').valueChanges();
+    this.audiosFB.subscribe((audios)=>{
+      console.log(audios)
+      this.audio = audios[this.getRandomInt(audios.length)]
     })
+  }
+  getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
   }
 }
