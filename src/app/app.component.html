@@ -1,3 +1,7 @@
 <div *ngIf="audio">
-
+  <audio [src]="audio.url" #player></audio>
 </div>
+<div>
+  <img [src]="'/assets/'+imgIdx+'.jpg'" width="50%">
+</div>
+<button (click)="wisdom()">Play</button>

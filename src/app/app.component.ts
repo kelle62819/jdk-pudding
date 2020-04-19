@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 @Component({
@@ -11,37 +11,40 @@ export class AppComponent {
   audiosFB: Observable<any[]>;
   audio: any
   url: string
+  audioObj: any 
   audioContext = new AudioContext()
-  currentBuffer  = null
+  imgIdx:number = 0
+  images: any[] = [
+    {src: "/assets/0.jpg"},
+    {src: "/assets/1.jpg"},
+    {src: "/assets/2.jpg"},
+    {src: "/assets/3.jpg"},
+    {src: "/assets/4.jpg"},
+    {src: "/assets/5.jpg"},
+  ]
+  @ViewChild('player', {static: false}) player:ElementRef
+  @ViewChild('anim', {static: false}) anim:ElementRef
   constructor(db: AngularFireDatabase) {
     this.audiosFB = db.list('audio').valueChanges();
     this.audiosFB.subscribe((audios)=>{
-      console.log(audios)
       this.audio = audios[this.getRandomInt(audios.length)]
-      this.loadMusic(this.audio.url)
+      this.audioContext.createMediaElementSource(this.player.nativeElement)
     })
   }
   getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
   }
-
-loadMusic(url) {   
-    var req = new XMLHttpRequest();
-    req.open( "GET", url, true );
-    req.responseType = "arraybuffer";   
-    let th = this 
-    req.onreadystatechange = function (e) {
-          if (req.readyState == 4) {
-             if(req.status == 200)
-                  th.audioContext.decodeAudioData(req.response, 
-                    function(buffer) {
-                             this.currentBuffer = buffer;
-                             //displayBuffer(buffer);
-                    });
-             else
-                  alert('error during the load.Wrong url or cross origin issue');
-          }
-    } ;
-    req.send();
-}
+  wisdom(){
+    this.player.nativeElement.play()
+    let index = 0;
+    setInterval(()=>{
+        if(index<this.audio.wave.length){
+          let calc = Math.round(this.audio.wave[index]*4)
+          if(calc > 4)
+           calc = 4
+          this.imgIdx = calc
+          index++
+        }
+    },100)
+  }
 }
