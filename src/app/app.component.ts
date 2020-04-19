@@ -15,8 +15,12 @@ export class AppComponent {
   audioContext = new AudioContext()
   imgIdx:number = 0
   imgs = new Array();
-  read: any[]
+  read: any[] = []
   imgCnt:number = 11
+  audios: any[]
+  listenerAdded:boolean = false
+  timer:any
+  fullAudios: any[]
   @ViewChild('player', {static: false}) player:ElementRef
   @ViewChild('anim', {static: false}) anim:ElementRef
   constructor(db: AngularFireDatabase) {
@@ -34,18 +38,38 @@ export class AppComponent {
     '/assets/pic10.png')
     this.audiosFB = db.list('audio').valueChanges();
     this.audiosFB.subscribe((audios)=>{
-      this.cleanRead(audios)
-      this.audio = audios[this.getRandomInt(audios.length)]
-      this.audioContext.createMediaElementSource(this.player.nativeElement)
+      if(audios && audios.length){
+        this.fullAudios = audios
+        this.audios = JSON.parse(JSON.stringify(audios))
+        this.cleanRead()
+        this.newWisdom()
+      }
     })
+  }
+  newWisdom(){
+    if(this.audios.length == 0)
+      this.audios = JSON.parse(JSON.stringify(this.fullAudios))
+    if(this.timer)
+     clearInterval(this.timer)
+    this.audio = this.audios.splice(this.getRandomInt(this.audios.length),1)[0]
+    if(this.player && this.player.nativeElement){
+      this.player.nativeElement.pause()
+    }
+    if(!this.listenerAdded)
+      setTimeout(()=>{
+        this.listenerAdded = true
+        this.player.nativeElement.addEventListener('ended', this.newWisdom.bind(this))
+      })
   }
   getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
   }
   wisdom(){
     this.player.nativeElement.play()
+    this.read.push(this.audio.id)
+    localStorage.setItem('readItems',JSON.stringify(this.read))
     let index = 0;
-    setInterval(()=>{
+    this.timer = setInterval(()=>{
         if(index<this.audio.wave.length){
           let calc = Math.round(this.audio.wave[index]*8)+2
           if(calc > 8)
@@ -59,14 +83,15 @@ export class AppComponent {
     for (var i = 0; i < args.length; i++) {
       this.imgs[i] = new Image();
       this.imgs[i].src = args[i];
-      console.log('loaded: ' + args[i]);
     }
   }
-  cleanRead(audios){
-    let readItems = localStorage.getItem('dataSource')
+  cleanRead(){
+    let readItems = localStorage.getItem('readItems')
     if(readItems){
-      console.log("found", readItems)
+      this.read = JSON.parse(readItems)
+      this.audios = this.audios.filter((audio)=>{
+        return this.read.indexOf(audio.id) == -1
+      })
     }
-
   }
 }

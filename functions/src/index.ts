@@ -56,6 +56,7 @@ let downURL = await bucket.file(outputFileName).getSignedUrl({
     //console.log('Audio content written to file: output.mp3');
 
      ref.child("audio").child(context.params.textID).update({
+         id: context.params.textID,
          text: snapshot.val(),
          url: downURL[0]
      })
