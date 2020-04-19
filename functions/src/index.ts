@@ -17,13 +17,13 @@ const bucket = admin.storage().bucket()
         input: {ssml: snapshot.val()},
         // Select the language and SSML voice gender (optional)
         voice: {
-            "languageCode": "en-AU",
-            "name": "en-AU-Wavenet-D"
+            "languageCode": "fr-FR",
+            "name": "fr-FR-Wavenet-B"
           },
         // select the type of audio encoding
         audioConfig: {audioEncoding: 'MP3',
-        "pitch": -4.8,
-        "speakingRate": 0.8
+        "pitch": -1.6,
+        "speakingRate": 0.93
     },
       };
   // Performs the text-to-speech request
