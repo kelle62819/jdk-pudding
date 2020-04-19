@@ -14,17 +14,11 @@ export class AppComponent {
   audioObj: any 
   audioContext = new AudioContext()
   imgIdx:number = 0
-  images: any[] = [
-    {src: "/assets/0.jpg"},
-    {src: "/assets/1.jpg"},
-    {src: "/assets/2.jpg"},
-    {src: "/assets/3.jpg"},
-    {src: "/assets/4.jpg"},
-    {src: "/assets/5.jpg"},
-  ]
+  imgs = new Array();
   @ViewChild('player', {static: false}) player:ElementRef
   @ViewChild('anim', {static: false}) anim:ElementRef
   constructor(db: AngularFireDatabase) {
+    this.pload('/assets/0.jpg','/assets/1.jpg','/assets/2.jpg','/assets/3.jpg','/assets/4.jpg')
     this.audiosFB = db.list('audio').valueChanges();
     this.audiosFB.subscribe((audios)=>{
       this.audio = audios[this.getRandomInt(audios.length)]
@@ -46,5 +40,12 @@ export class AppComponent {
           index++
         }
     },100)
+  }
+  pload(...args: any[]):void {
+    for (var i = 0; i < args.length; i++) {
+      this.imgs[i] = new Image();
+      this.imgs[i].src = args[i];
+      console.log('loaded: ' + args[i]);
+    }
   }
 }
