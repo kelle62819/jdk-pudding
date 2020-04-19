@@ -17,8 +17,8 @@ const bucket = admin.storage().bucket()
         input: {ssml: snapshot.val()},
         // Select the language and SSML voice gender (optional)
         voice: {
-            "languageCode": "fr-FR",
-            "name": "fr-FR-Wavenet-B"
+            "languageCode": "en-GB",
+            "name": "en-GB-Wavenet-B"
           },
         // select the type of audio encoding
         audioConfig: {audioEncoding: 'MP3',
