@@ -3,6 +3,7 @@
     height: 100%;
     display: inline-block; 
     margin: 20px;
+    text-align: center;
 }
 .frame{  
     width: 50%;
@@ -18,3 +19,42 @@ img{
 img:hover{
         cursor: pointer;
 }
+.bmc-button img{
+    height: 34px !important;
+    width: 35px !important;
+    margin-bottom: 1px !important;
+    box-shadow: none !important;
+    border: none !important;
+    vertical-align: middle !important;
+}.bmc-button{
+        padding: 7px 10px 7px 10px !important;
+        line-height: 35px !important;
+        height:51px !important;
+        min-width:217px !important;
+        text-decoration: none !important;
+        display:inline-flex !important;
+        color:#5c3101 !important;
+        background-color: none !important;
+        border-radius: 5px !important;
+        border: 2px solid #5c3101 !important;
+        padding: 7px 10px 7px 10px !important;
+        font-size: 20px !important;
+        letter-spacing:-0.08px !important;
+        margin: 0 auto !important;
+        font-family:'Lato', sans-serif !important;
+        -webkit-box-sizing: border-box !important;
+        box-sizing: border-box !important;
+        -o-transition: 0.3s all linear !important;
+        -webkit-transition: 0.3s all linear !important;
+        -moz-transition: 0.3s all linear !important;
+        -ms-transition: 0.3s all linear !important;
+        transition: 0.3s all linear !important;
+    }
+    .bmc-button:hover, .bmc-button:active, .bmc-button:focus {
+        text-decoration: none !important;
+        opacity: 0.85 !important;
+        color:#8a5302 !important;
+    }
+    .buypudding{
+        padding-top: 10%;
+    }
