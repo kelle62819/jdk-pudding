@@ -12,9 +12,12 @@ const bucket = admin.storage().bucket()
 // // https://firebase.google.com/docs/functions/typescript
 //
  export const newText = functions.database.ref("/new/{textID}").onCreate(async (snapshot, context)=>{
- 
+    let puddingText = snapshot.val()
+    let ssml = puddingText.replace(/,/g,'<break time="250ms"/>')
+    ssml = '<speak>' + ssml + '</speak>'
+
      const tsRequest = {
-        input: {ssml: snapshot.val()},
+        input: {ssml: ssml},
         // Select the language and SSML voice gender (optional)
         voice: {
             "languageCode": "en-GB",
@@ -57,7 +60,8 @@ let downURL = await bucket.file(outputFileName).getSignedUrl({
 
      ref.child("audio").child(context.params.textID).update({
          id: context.params.textID,
-         text: snapshot.val(),
+         text: puddingText,
+         ssml: ssml,
          url: downURL[0]
      })
      return "OK"
