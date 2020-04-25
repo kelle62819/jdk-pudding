@@ -21,10 +21,13 @@ export class AppComponent {
   listenerAdded:boolean = false
   timer:any
   fullAudios: any[]
+  lang: string;
   @ViewChild('player', {static: false}) player:ElementRef
   @ViewChild('anim', {static: false}) anim:ElementRef
-  constructor(db: AngularFireDatabase) {
-    
+  constructor(private db: AngularFireDatabase) {
+    this.lang = navigator.language.slice(0,2).toUpperCase(); 
+    if(this.lang != "FR")
+      this.lang = "EN"
     this.pload('/assets/pic0.png',
     '/assets/pic1.png',
     '/assets/pic2.png',
@@ -36,7 +39,10 @@ export class AppComponent {
     '/assets/pic8.png',
     '/assets/pic9.png',
     '/assets/pic10.png')
-    this.audiosFB = db.list('audio').valueChanges();
+    this.initAudio()
+  }
+  initAudio(){
+    this.audiosFB = this.db.list('audio/'+this.lang).valueChanges();
     this.audiosFB.subscribe((audios)=>{
       if(audios && audios.length){
         this.fullAudios = audios
@@ -44,7 +50,7 @@ export class AppComponent {
         this.cleanRead()
         this.newWisdom()
       }
-    })
+    })    
   }
   newWisdom(){
     if(this.audios.length == 0)
@@ -67,7 +73,7 @@ export class AppComponent {
   wisdom(){
     this.player.nativeElement.play()
     this.read.push(this.audio.id)
-    localStorage.setItem('readItems',JSON.stringify(this.read))
+    localStorage.setItem('read'+this.lang,JSON.stringify(this.read))
     let index = 0;
     this.timer = setInterval(()=>{
         if(index<this.audio.wave.length){
@@ -86,12 +92,16 @@ export class AppComponent {
     }
   }
   cleanRead(){
-    let readItems = localStorage.getItem('readItems')
+    let readItems = localStorage.getItem('read' + this.lang)
     if(readItems){
       this.read = JSON.parse(readItems)
       this.audios = this.audios.filter((audio)=>{
         return this.read.indexOf(audio.id) == -1
       })
     }
+  }
+  changeLang(lang: string){
+    this.lang = lang
+    this.initAudio()
   }
 }

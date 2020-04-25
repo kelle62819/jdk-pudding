@@ -3,11 +3,16 @@
 </div>
 <div class="outer-wrapper">
   <div class="frame">
-    <img [src]="'/assets/pic'+imgIdx+'.png'" (click)="wisdom()">
-    <div class="buypudding">
-      <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/puddingwisdom">
-        <img src="/assets/pudding.png" alt="Buy us a pudding"><span style="margin-left:10px;margin-right:5px;font-size:19px !important;">Buy us a pudding</span>
-      </a>
+    <div>
+      <span><a href="#" (click)="changeLang('EN')" [ngClass]="{'active-lang': lang=='EN'}">EN</a></span> |
+      <span><a href="#" (click)="changeLang('FR')" [ngClass]="{'active-lang': lang=='FR'}">FR</a></span>
     </div>
+    <img [src]="'/assets/pic'+imgIdx+'.png'" (click)="wisdom()">
   </div>
+</div>
+<div class="buypudding">
+  <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/puddingwisdom">
+    <img src="/assets/pudding.png" alt="Buy us a pudding"><span
+      style="margin-left:10px;margin-right:5px;font-size:19px !important;">Buy us a pudding</span>
+  </a>
 </div>

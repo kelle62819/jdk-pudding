@@ -1,7 +1,6 @@
 .outer-wrapper{
     width: 100%;
     height: 100%;
-    display: inline-block; 
     margin: 20px;
     text-align: center;
 }
@@ -9,7 +8,7 @@
     width: 50%;
     vertical-align: middle;
     text-align: center;
-    display: table-cell;
+    margin: 0 auto;
 }    
 img{
     max-width: 100%;
@@ -56,5 +55,10 @@ img:hover{
         color:#8a5302 !important;
     }
     .buypudding{
-        padding-top: 10%;
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+    }
+    .active-lang{
+        font-weight: bold;
     }

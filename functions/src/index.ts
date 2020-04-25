@@ -11,18 +11,25 @@ const bucket = admin.storage().bucket()
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
- export const newText = functions.database.ref("/new/{textID}").onCreate(async (snapshot, context)=>{
+ export const newText = functions.database.ref("/new/{lang}/{textID}").onCreate(async (snapshot, context)=>{
+    let voice
     let puddingText = snapshot.val()
     let ssml = puddingText.replace(/,/g,'<break time="250ms"/>')
     ssml = '<speak>' + ssml + '</speak>'
-
+      if(context.params.lang == 'FR')
+        voice = {
+          "languageCode": "fr-FR",
+          "name": "fr-FR-Wavenet-B"
+        }
+      else
+        voice = {
+          "languageCode": "en-GB",
+          "name": "en-GB-Wavenet-B"
+        }
      const tsRequest = {
         input: {ssml: ssml},
         // Select the language and SSML voice gender (optional)
-        voice: {
-            "languageCode": "en-GB",
-            "name": "en-GB-Wavenet-B"
-          },
+        voice: voice,
         // select the type of audio encoding
         audioConfig: {audioEncoding: 'MP3',
         "pitch": -1.6,
@@ -47,7 +54,7 @@ const bucket = admin.storage().bucket()
 //console.log(tsResponse.audioContent)
 
 audioCtx.decodeAudioData(tsResponse.audioContent, (audioBuffer:any)=>{
-  ref.child("audio").child(context.params.textID).update({
+  ref.child("audio").child(context.params.lang).child(context.params.textID).update({
     wave: filterData(audioBuffer)
   })
 })
@@ -58,7 +65,7 @@ let downURL = await bucket.file(outputFileName).getSignedUrl({
     })
     //console.log('Audio content written to file: output.mp3');
 
-     ref.child("audio").child(context.params.textID).update({
+     ref.child("audio").child(context.params.lang).child(context.params.textID).update({
          id: context.params.textID,
          text: puddingText,
          ssml: ssml,
