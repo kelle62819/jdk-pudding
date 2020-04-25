@@ -12,7 +12,7 @@ export class AppComponent {
   audio: any
   url: string
   audioObj: any 
-  audioContext = new AudioContext()
+  audioContext 
   imgIdx:number = 0
   imgs = new Array();
   read: any[] = []
@@ -25,6 +25,9 @@ export class AppComponent {
   @ViewChild('player', {static: false}) player:ElementRef
   @ViewChild('anim', {static: false}) anim:ElementRef
   constructor(private db: AngularFireDatabase) {
+    let AudioContext = (<any>window).AudioContext 
+    || (<any>window).webkitAudioContext
+    this.audioContext = new AudioContext
     this.lang = navigator.language.slice(0,2).toUpperCase(); 
     if(this.lang != "FR")
       this.lang = "EN"
